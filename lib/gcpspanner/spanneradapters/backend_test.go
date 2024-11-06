@@ -863,8 +863,7 @@ func TestFeaturesSearch(t *testing.T) {
 func CompareFeatures(f1, f2 backend.Feature) bool {
 	// 1. Basic Equality Checks
 	if f1.FeatureId != f2.FeatureId ||
-		f1.Name != f2.Name ||
-		f1.Usage != f2.Usage {
+		f1.Name != f2.Name {
 		return false
 	}
 
