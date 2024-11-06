@@ -1058,7 +1058,13 @@ func TestGetFeature(t *testing.T) {
 						},
 					},
 				},
-				BrowserImplementations: nil,
+				BrowserImplementations: &map[string]backend.BrowserImplementation{
+					"browser3": {
+						Status:  valuePtr(backend.Available),
+						Date:    nil,
+						Version: nil,
+					},
+				},
 			},
 		},
 	}
