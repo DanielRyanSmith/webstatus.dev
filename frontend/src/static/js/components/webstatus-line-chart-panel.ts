@@ -29,6 +29,7 @@ import {Task} from '@lit/task';
 import {APIClient, apiClientContext} from '../contexts/api-client-context.js';
 import {consume} from '@lit/context';
 import {SHARED_STYLES} from '../css/shared-css.js';
+import {ChartOptionsInput} from '../api/client.js';
 
 /**
  * Interface defining the structure of metric data for the line chart.
@@ -220,10 +221,7 @@ export abstract class WebstatusLineChartPanel extends LitElement {
    * @abstract
    * @returns {{seriesColors: Array<string>; vAxisTitle: string;}} Chart options input.
    */
-  abstract getDisplayDataChartOptionsInput(): {
-    seriesColors: Array<string>;
-    vAxisTitle: string;
-  };
+  abstract getDisplayDataChartOptionsInput(): ChartOptionsInput;
 
   _task?: Task;
 
@@ -460,7 +458,8 @@ export abstract class WebstatusLineChartPanel extends LitElement {
   }
 
   generateDisplayDataChartOptions(): google.visualization.LineChartOptions {
-    const {seriesColors, vAxisTitle} = this.getDisplayDataChartOptionsInput();
+    const {series, seriesColors, vAxisTitle} =
+      this.getDisplayDataChartOptionsInput();
     // Add one day to this.endDate.
     const endDate = new Date(this.endDate.getTime() + 1000 * 60 * 60 * 24);
     const options: google.visualization.LineChartOptions = {
@@ -491,6 +490,9 @@ export abstract class WebstatusLineChartPanel extends LitElement {
         zoomDelta: 0.01,
       },
     };
+    if (series) {
+      options.series = series;
+    }
 
     return options;
   }

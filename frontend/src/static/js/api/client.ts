@@ -79,6 +79,12 @@ export type UpdateSavedSearchInput = {
   query?: string;
 };
 
+export type ChartOptionsInput = {
+  series?: {[lineIndex: number]: {lineDashStyle?: number[]}};
+  seriesColors: Array<string>;
+  vAxisTitle: string;
+};
+
 /**
  * Iterable list of browsers we have data for.
  * This is the same as the items in the BrowsersParameter enum,
@@ -126,6 +132,22 @@ export const BROWSER_ID_TO_COLOR: Record<BrowsersParameter | 'total', string> =
     edge: '#0F9D58',
     total: '#888888',
   };
+
+export const BROWSER_ID_TO_LINE_STYLE: Record<
+  BrowsersParameter | 'total',
+  {
+    lineDashStyle?: number[];
+  }
+> = {
+  chrome: {},
+  chrome_android: {lineDashStyle: [10, 4]},
+  firefox: {},
+  firefox_android: {lineDashStyle: [10, 4]},
+  safari: {},
+  safari_ios: {lineDashStyle: [10, 4]},
+  edge: {},
+  total: {},
+};
 
 export const CHANNEL_ID_TO_LABEL: Record<ChannelsParameter, string> = {
   stable: 'Stable',

@@ -27,6 +27,8 @@ import {
   BrowsersParameter,
   BROWSER_ID_TO_COLOR,
   BROWSER_ID_TO_LABEL,
+  BROWSER_ID_TO_LINE_STYLE,
+  ChartOptionsInput,
 } from '../api/client.js';
 import {customElement, state} from 'lit/decorators.js';
 
@@ -36,18 +38,24 @@ export class WebstatusStatsGlobalFeatureCountChartPanel extends WebstatusLineCha
   // https://github.com/mdn/browser-compat-data/blob/92d6876b420b0e6e69eb61256ed04827c9889063/browsers/edge.json#L53-L66
   // Set offset to -500 days.
   override dataFetchStartDateOffsetMsec: number = -500 * 24 * 60 * 60 * 1000;
-  getDisplayDataChartOptionsInput(): {
-    seriesColors: string[];
-    vAxisTitle: string;
-  } {
-    // Compute seriesColors from selected browsers and BROWSER_ID_TO_COLOR
+  getDisplayDataChartOptionsInput(): ChartOptionsInput {
     const selectedBrowsers = this.supportedBrowsers;
-    const seriesColors = [...selectedBrowsers, 'total'].map(browser => {
+    const chartCategories: (BrowsersParameter | 'total')[] = [
+      ...selectedBrowsers,
+      'total',
+    ];
+    // Compute seriesColors from selected browsers and BROWSER_ID_TO_COLOR
+    const seriesColors = chartCategories.map(browser => {
       const browserKey = browser as keyof typeof BROWSER_ID_TO_COLOR;
       return BROWSER_ID_TO_COLOR[browserKey];
     });
+    const seriesOptions: {[lineIndex: number]: {lineDashStyle?: number[]}} = {};
+    chartCategories.forEach((browser, i) => {
+      seriesOptions[i] = BROWSER_ID_TO_LINE_STYLE[browser];
+    });
 
     return {
+      series: seriesOptions,
       seriesColors: seriesColors,
       vAxisTitle: 'Number of features supported',
     };
